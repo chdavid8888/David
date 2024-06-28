@@ -25,5 +25,13 @@ def main() :
   st.write('Menampilkan Dataframe dengan St AgGrid')
   AgGrid(house)
   st.table([x for x in range(1,5)])
+
+  click_me_btn = st.button('Click me')
+  st.write(click_me_btn)
+  check_btn = st.checkbox('Klik Jika Setuju')
+  if check_btn :
+    st.write('Anda Setuju')
+
+  #radio_button = st.radio 
 if __name__ == '__main__' : 
   main()
