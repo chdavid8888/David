@@ -1,93 +1,91 @@
 import streamlit as st 
 import pandas as pd 
-#import requests
 from st_aggrid import AgGrid
 
+# Load data
 house = pd.read_csv('house_clean.csv')
 
-def main() : 
-  st.write('Minimal Example')
+# Fungsi utama untuk Streamlit app
+def main():
+    st.title('Halaman Streamlit David')
+    st.subheader('This is SubHeader')
+    st.markdown('# Rendering Markdown ')
+    st.write('Some Phytagorean Equation : ')
+    st.latex('c^2 = a^2 + b^2')
 
-if __name__ == '__main__' : 
-  main()
-
-def main() : 
-  st.header('Halaman Streamlit David')
-  st.subheader('This is SubHeader')
-  st.markdown('# Rendering Markdown ')
-  st.write('Some Phytagorean Equation : ')
-  st.latex('c^2 = a^2+b^2')
-
-  st.dataframe(house)
-  st.write('Metrics')
-  st.metric(label="Temperature", value="70 °F", delta="1.2 °F")
-
-  st.write('Menampilkan Dataframe dengan St AgGrid')
-  #AgGrid(house).head(100)
-  st.table([x for x in range(1,5)])
-
-  click_me_btn = st.button('Click Me')
-  st.write(click_me_btn) #Return True kalo di Click 
-  check_btn = st.checkbox('Klik Jika Setuju')
-  if check_btn :
-      st.write('Anda Setuju')
-      radio_button= st.radio('Choose below',[x for x in range(1,3)])
-      st.write('Anda Memilih',radio_button)
-
-
-
-  #slider 
-  age_slider = st.slider('Berapa Usia Anda',0,100)
-  st.write('Usia Anda',age_slider)
+    st.dataframe(house)
     
-  #Input (Typing)
-  num_input = st.number_input('Input Berapapun')
-  st.write('Kuadrat dari {} adalah {}'.format(num_input,num_input**2))
+    st.write('Metrics')
+    st.metric(label="Temperature", value="70 °F", delta="1.2 °F")
 
-  #sidebar 
-  sidebar_checkbox = st.sidebar.checkbox('Checkbox di Sidebar')
-  sidebar_radio_button = st.sidebar.radio('Pilih Menu',options=['A','B','C'])
-  
-  #columns :
-  col1, col2, col3 = st.columns(3)
+    st.write('Menampilkan Dataframe dengan St AgGrid')
+    AgGrid(house.head(100))
+    st.table([x for x in range(1, 5)])
 
-  with col1:
-     st.header("A cat")
-     st.image("https://static.streamlit.io/examples/cat.jpg")
-  #atau dengan assignment 
-  image_col1 = col1.image("https://static.streamlit.io/examples/cat.jpg")
+    # Button dan Checkbox
+    click_me_btn = st.button('Click Me')
+    if click_me_btn:
+        st.write('Button Clicked!')
 
-  with col2:
-     st.header("A dog")
-     st.image("https://static.streamlit.io/examples/dog.jpg")
+    check_btn = st.checkbox('Klik Jika Setuju')
+    if check_btn:
+        st.write('Anda Setuju')
+        radio_button = st.radio('Choose below', [x for x in range(1, 3)])
+        st.write('Anda Memilih', radio_button)
 
-  with col3:
-     st.header("An owl")
-     st.image("https://static.streamlit.io/examples/owl.jpg")
-  #expander 
-  #dengan with atau dengan assignment 
-  expander = st.expander("Klik Untuk Detail ")
-  expander.write('Anda Telah Membuka Detail')
+    # Slider
+    age_slider = st.slider('Berapa Usia Anda', 0, 100)
+    st.write('Usia Anda', age_slider)
 
-  #sidebar 
-  with st.form("Data Diri"):
-     st.write("Inside the form")
-     slider_val = st.slider("Form slider")
-     checkbox_val = st.checkbox("Form checkbox")
+    # Input (Typing)
+    num_input = st.number_input('Input Berapapun')
+    st.write(f'Kuadrat dari {num_input} adalah {num_input**2}')
 
-     # Every form must have a submit button.
-     submitted = st.form_submit_button("Submit")
-     if submitted:
-         st.write("slider", slider_val, "checkbox", checkbox_val)
+    # Sidebar
+    st.sidebar.header('Sidebar Menu')
+    sidebar_checkbox = st.sidebar.checkbox('Checkbox di Sidebar')
+    sidebar_radio_button = st.sidebar.radio('Pilih Menu', options=['A', 'B', 'C'])
+    st.sidebar.write(f'You selected {sidebar_radio_button} from the sidebar.')
 
-  st.write("Outside the form")
+    # Columns
+    col1, col2, col3 = st.columns(3)
 
-  tab1, tab2 = st.tabs(["Tab 1", "Tab2"])
-  tab1.write("this is tab 1")
-  tab2.write("this is tab 2")
-  # You can also use "with" notation:
-  with tab1:
-    st.radio("Select one:", [1, 2])
+    with col1:
+        st.header("A cat")
+        st.image("https://static.streamlit.io/examples/cat.jpg")
 
-if __name__ == '__main__' : 
-  main()
+    with col2:
+        st.header("A dog")
+        st.image("https://static.streamlit.io/examples/dog.jpg")
+
+    with col3:
+        st.header("An owl")
+        st.image("https://static.streamlit.io/examples/owl.jpg")
+
+    # Expander
+    with st.expander("Klik Untuk Detail"):
+        st.write('Anda Telah Membuka Detail')
+
+    # Form di Sidebar
+    with st.sidebar.form("Data Diri"):
+        st.write("Inside the form")
+        slider_val = st.slider("Form slider")
+        checkbox_val = st.checkbox("Form checkbox")
+        
+        # Tombol submit
+        submitted = st.form_submit_button("Submit")
+        if submitted:
+            st.write("Slider:", slider_val, "Checkbox:", checkbox_val)
+
+    st.write("Outside the form")
+
+    # Tabs
+    tab1, tab2 = st.tabs(["Tab 1", "Tab 2"])
+    tab1.write("this is tab 1")
+    tab2.write("this is tab 2")
+
+    with tab1:
+        st.radio("Select one:", [1, 2])
+
+if __name__ == '__main__':
+    main()
