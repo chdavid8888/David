@@ -1,9 +1,39 @@
 import streamlit as st 
 import pandas as pd 
 from st_aggrid import AgGrid
+import numpy as np
 
 # Load data
 house = pd.read_csv('house_clean.csv')
+
+# Fungsi untuk menampilkan plot
+def show_plot():
+    st.write("## Simple Line Plot")
+    data = np.random.randn(10, 2)
+    st.line_chart(data)
+
+# Fungsi untuk menampilkan peta
+def show_map():
+    st.write("## Map Example")
+    df = pd.DataFrame(
+        np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
+        columns=['lat', 'lon'])
+    st.map(df)
+
+# Fungsi untuk menampilkan bar chart
+def show_bar_chart():
+    st.write("## Bar Chart Example")
+    data = pd.DataFrame(
+        np.random.randn(50, 3),
+        columns=["a", "b", "c"])
+    st.bar_chart(data)
+
+# Fungsi untuk menampilkan progress bar
+def show_progress():
+    st.write("## Progress Bar Example")
+    progress_bar = st.progress(0)
+    for i in range(100):
+        progress_bar.progress(i + 1)
 
 # Fungsi utama untuk Streamlit app
 def main():
@@ -13,13 +43,16 @@ def main():
     st.write('Some Phytagorean Equation : ')
     st.latex('c^2 = a^2 + b^2')
 
+    # Menampilkan DataFrame
     st.dataframe(house)
-    
+
+    # Menampilkan Metrics
     st.write('Metrics')
     st.metric(label="Temperature", value="70 °F", delta="1.2 °F")
 
+    # Menampilkan DataFrame dengan St AgGrid
     st.write('Menampilkan Dataframe dengan St AgGrid')
-    AgGrid(house.head(10))
+    AgGrid(house.head(100))
     st.table([x for x in range(1, 5)])
 
     # Button dan Checkbox
@@ -46,6 +79,20 @@ def main():
     sidebar_checkbox = st.sidebar.checkbox('Checkbox di Sidebar')
     sidebar_radio_button = st.sidebar.radio('Pilih Menu', options=['A', 'B', 'C'])
     st.sidebar.write(f'You selected {sidebar_radio_button} from the sidebar.')
+
+    # Menampilkan berbagai fungsi lain
+    st.sidebar.write("## Pilih Fungsi Tambahan")
+    if st.sidebar.button('Tampilkan Plot'):
+        show_plot()
+
+    if st.sidebar.button('Tampilkan Peta'):
+        show_map()
+
+    if st.sidebar.button('Tampilkan Bar Chart'):
+        show_bar_chart()
+
+    if st.sidebar.button('Tampilkan Progress Bar'):
+        show_progress()
 
     # Columns
     col1, col2, col3 = st.columns(3)
@@ -81,11 +128,12 @@ def main():
 
     # Tabs
     tab1, tab2 = st.tabs(["Tab 1", "Tab 2"])
-    tab1.write("this is tab 1")
-    tab2.write("this is tab 2")
-
     with tab1:
+        st.write("This is tab 1")
         st.radio("Select one:", [1, 2])
+
+    with tab2:
+        st.write("This is tab 2")
 
 if __name__ == '__main__':
     main()
