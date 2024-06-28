@@ -23,6 +23,6 @@ def main() :
   st.metric(label="Temperature", value="70 °F", delta="1.2 °F")
 
   st.write('Menampilkan Dataframe dengan St AgGrid')
-  AgGrid(titanic)
+  AgGrid(house)
 if __name__ == '__main__' : 
   main()
