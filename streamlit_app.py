@@ -26,6 +26,7 @@ if st.button("Predict"):
     inp = np.array([sepal_length, sepal_width, petal_length, petal_width])
     inp = np.expand_dims(inp, axis=0)
     prediction = model.predict(inp)
+    
 
 # Show Results when the button is clicked
     result = species[np.argmax(prediction)]
