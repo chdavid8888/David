@@ -1,139 +1,33 @@
+#import library needed
+import pandas as pd
 import streamlit as st 
-import pandas as pd 
-from st_aggrid import AgGrid
+import pickle
 import numpy as np
 
-# Load data
-house = pd.read_csv('house_clean.csv')
+# Load the best model
+with open('iris_model.pkl', 'rb') as f:
+    model = pickle.load(f)
 
-# Fungsi untuk menampilkan plot
-def show_plot():
-    st.write("## Simple Line Plot")
-    data = np.random.randn(10, 2)
-    st.line_chart(data)
+species = ['setosa', 'versicolor', 'virginica']
 
-# Fungsi untuk menampilkan peta
-def show_map():
-    st.write("## Map Example")
-    df = pd.DataFrame(
-        np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-        columns=['lat', 'lon'])
-    st.map(df)
+st.title("Iris Flower Classification")
+st.write("This app correctly classifies iris flower among 3 possible species")
 
-# Fungsi untuk menampilkan bar chart
-def show_bar_chart():
-    st.write("## Bar Chart Example")
-    data = pd.DataFrame(
-        np.random.randn(50, 3),
-        columns=["a", "b", "c"])
-    st.bar_chart(data)
+# Creating Sidebar for inputs
+st.sidebar.title("Inputs")
+sepal_length = st.sidebar.number_input("sepal length (cm)", 4.3, 7.9, 5.0)
+sepal_width = st.sidebar.number_input("sepal width (cm)", 2.0, 4.4, 3.6)
+petal_length = st.sidebar.number_input("petal length (cm)", 1.0, 6.9, 1.4)
+petal_width = st.sidebar.number_input("petal width (cm)", 0.1, 2.5, 0.2)
 
-# Fungsi untuk menampilkan progress bar
-def show_progress():
-    st.write("## Progress Bar Example")
-    progress_bar = st.progress(0)
-    for i in range(100):
-        progress_bar.progress(i + 1)
+# Button to trigger prediction
+if st.button("Predict"):
+# Getting Prediction from model
+    inp = np.array([sepal_length, sepal_width, petal_length, petal_width])
+    inp = np.expand_dims(inp, axis=0)
+    prediction = model.predict(inp)
 
-# Fungsi utama untuk Streamlit app
-def main():
-    st.title('Halaman Streamlit David')
-    st.subheader('This is SubHeader')
-    st.markdown('# Rendering Markdown ')
-    st.write('Some Phytagorean Equation : ')
-    st.latex('c^2 = a^2 + b^2')
+# Show Results when the button is clicked
+    result = species[np.argmax(prediction)]
+    st.write("**This flower belongs to " + result + " class**")
 
-    # Menampilkan DataFrame
-    st.dataframe(house)
-
-    # Menampilkan Metrics
-    st.write('Metrics')
-    st.metric(label="Temperature", value="70 °F", delta="1.2 °F")
-
-    # Menampilkan DataFrame dengan St AgGrid
-    st.write('Menampilkan Dataframe dengan St AgGrid')
-    AgGrid(house.head(100))
-    st.table([x for x in range(1, 5)])
-
-    # Button dan Checkbox
-    click_me_btn = st.button('Click Me')
-    if click_me_btn:
-        st.write('Button Clicked!')
-
-    check_btn = st.checkbox('Klik Jika Setuju')
-    if check_btn:
-        st.write('Anda Setuju')
-        radio_button = st.radio('Choose below', [x for x in range(1, 3)])
-        st.write('Anda Memilih', radio_button)
-
-    # Slider
-    age_slider = st.slider('Berapa Usia Anda', 0, 100)
-    st.write('Usia Anda', age_slider)
-
-    # Input (Typing)
-    num_input = st.number_input('Input Berapapun')
-    st.write(f'Kuadrat dari {num_input} adalah {num_input**2}')
-
-    # Sidebar
-    st.sidebar.header('Sidebar Menu')
-    sidebar_checkbox = st.sidebar.checkbox('Checkbox di Sidebar')
-    sidebar_radio_button = st.sidebar.radio('Pilih Menu', options=['A', 'B', 'C'])
-    st.sidebar.write(f'You selected {sidebar_radio_button} from the sidebar.')
-
-    # Menampilkan berbagai fungsi lain
-    st.sidebar.write("## Pilih Fungsi Tambahan")
-    if st.sidebar.button('Tampilkan Plot'):
-        show_plot()
-
-    if st.sidebar.button('Tampilkan Peta'):
-        show_map()
-
-    if st.sidebar.button('Tampilkan Bar Chart'):
-        show_bar_chart()
-
-    if st.sidebar.button('Tampilkan Progress Bar'):
-        show_progress()
-
-    # Columns
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.header("A cat")
-        st.image("https://static.streamlit.io/examples/cat.jpg")
-
-    with col2:
-        st.header("A dog")
-        st.image("https://static.streamlit.io/examples/dog.jpg")
-
-    with col3:
-        st.header("An owl")
-        st.image("https://static.streamlit.io/examples/owl.jpg")
-
-    # Expander
-    with st.expander("Klik Untuk Detail"):
-        st.write('Anda Telah Membuka Detail')
-
-    # Form di Sidebar
-    with st.sidebar.form("Data Diri"):
-        st.write("Inside the form")
-        slider_val = st.slider("Form slider")
-        checkbox_val = st.checkbox("Form checkbox")
-        
-        # Tombol submit
-        submitted = st.form_submit_button("Submit")
-        if submitted:
-            st.write("Slider:", slider_val, "Checkbox:", checkbox_val)
-
-    st.write("Outside the form")
-
-    # Tabs
-    tab1, tab2 = st.tabs(["Tab 1", "Tab 2"])
-    with tab1:
-        st.write("This is tab 1")
-        st.radio("Select one:", [1, 2])
-
-    with tab2:
-        st.write("This is tab 2")
-
-if __name__ == '__main__':
-    main()
